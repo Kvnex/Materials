@@ -2,46 +2,167 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Materiales SAP</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; }
-    input, button, select { padding: 10px; font-size: 16px; margin: 5px 0; }
-    ul { list-style: none; padding: 0; max-height: 300px; overflow-y: auto; background: white; border: 1px solid #ccc; }
-    li { margin-bottom: 5px; padding: 10px; cursor: pointer; border-bottom: 1px solid #eee; }
-    li:hover { background: #e0f7fa; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { padding: 10px; border: 1px solid #ccc; }
-    th { background-color: #2196f3; color: white; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f2f5;
+      margin: 0;
+      padding: 20px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #0d47a1;
+      color: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+    }
+
+    header h1 {
+      display: flex;
+      align-items: center;
+      font-size: 1.5em;
+      margin: 0;
+    }
+
+    header img {
+      height: 32px;
+      margin-right: 10px;
+      border-radius: 4px;
+    }
+
+    input, select, button {
+      font-size: 16px;
+      padding: 10px;
+      margin: 10px 5px 5px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #1976d2;
+      color: white;
+      cursor: pointer;
+      border: none;
+    }
+
+    button:hover {
+      background-color: #1565c0;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      max-height: 250px;
+      overflow-y: auto;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    li {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+    }
+
+    li:hover {
+      background: #e3f2fd;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: white;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background-color: #2196f3;
+      color: white;
+    }
+
+    @media (max-width: 600px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      td {
+        border: none;
+        position: relative;
+        padding-left: 50%;
+        text-align: right;
+      }
+
+      td::before {
+        position: absolute;
+        left: 10px;
+        top: 12px;
+        white-space: nowrap;
+        font-weight: bold;
+      }
+
+      td:nth-child(1)::before { content: "Código"; }
+      td:nth-child(2)::before { content: "Texto Breve"; }
+      td:nth-child(3)::before { content: "Descripción"; }
+      td:nth-child(4)::before { content: "UM"; }
+      td:nth-child(5)::before { content: "Cantidad"; }
+      td:nth-child(6)::before { content: "Eliminar"; }
+    }
   </style>
 </head>
 <body>
-  <h1>🛒 Materiales SAP</h1>
+  <header>
+    <h1><img src="https://ebiz.pe/wp-content/uploads/sites/5/2024/07/Logos-Copeinca-04-1-1.jpg" alt="C Copeinca">Materiales SAP</h1>
+  </header>
 
   <input type="text" id="busqueda" placeholder="Buscar material... Ej: *manguera*r12*" size="50">
   <ul id="sugerencias"></ul>
 
   <table id="carrito">
     <thead>
-      <tr><th>Código</th><th>Texto Breve</th><th>Descripción</th><th>UM</th><th>Cantidad</th><th>Eliminar</th></tr>
+      <tr>
+        <th>Código</th>
+        <th>Texto Breve</th>
+        <th>Descripción</th>
+        <th>UM</th>
+        <th>Cantidad</th>
+        <th>Eliminar</th>
+      </tr>
     </thead>
     <tbody></tbody>
   </table>
 
-  <button onclick="exportarExcel()">📄 Exportar a Excel</button>
-  <button onclick="limpiarCarrito()">🧹 Limpiar</button>
+  <div style="margin-top: 15px;">
+    <button onclick="exportarExcel()">📄 Exportar a Excel</button>
+    <button onclick="limpiarCarrito()">🧹 Limpiar</button>
+  </div>
 
-  <!-- Destinatario y envío -->
-  <br><br>
-  <select id="destinatario">
-    <option value="">Seleccionar destinatario</option>
-    <option value="FCoronado@copeinca.com.pe">Felipe Coronado</option>
-    <option value="iascate@copeinca.com.pe">Ivan Ascate</option>
-    <option value="CGarciaD@copeinca.com.pe">Carlos Garcia Durand</option>
-    <option value="rdominguez@copeinca.com.pe">Ronald Valdelomar Dominguez Villacorta</option>
-    <option value="JMechato@copeinca.com.pe">Justo Mechato Timana</option>
-    <option value="jchuchullo@copeinca.com.pe">Jose Chuchullo</option>
-  </select>
-  <button onclick="enviarCorreo()">📧 Enviar por correo</button>
+  <div style="margin-top: 20px;">
+    <label for="destinatario">Enviar a:</label>
+    <select id="destinatario">
+      <option value="">Seleccionar destinatario</option>
+      <option value="FCoronado@copeinca.com.pe">Felipe Coronado</option>
+      <option value="iascate@copeinca.com.pe">Ivan Ascate</option>
+      <option value="CGarciaD@copeinca.com.pe">Carlos Garcia Durand</option>
+      <option value="rdominguez@copeinca.com.pe">Ronald Valdelomar</option>
+      <option value="JMechato@copeinca.com.pe">Justo Mechato</option>
+      <option value="jchuchullo@copeinca.com.pe">Jose Chuchullo</option>
+    </select>
+    <button onclick="enviarCorreo()">📧 Enviar por correo</button>
+  </div>
 
   <script>
     let productosBase = [];
@@ -138,10 +259,6 @@
       });
     });
   </script>
-  <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
-</body>
-</html>
-
   <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 </body>
 </html>
