@@ -2,188 +2,46 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Materiales SAP</title>
   <style>
-    /* Reset de estilo básico */
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f9f9f9;
-      margin: 0;
-      padding: 20px;
-    }
-
-    /* Cabecera con el logo de Copeinca */
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #00bcd4; /* Azul */
-      color: white;
-      padding: 10px 20px;
-      border-radius: 8px;
-      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    header h1 {
-      display: flex;
-      align-items: center;
-      font-size: 1.4em;
-      margin: 0;
-    }
-
-    header img {
-      height: 28px;
-      margin-right: 10px;
-      border-radius: 50%;
-    }
-
-    /* Estilos para los botones y entradas */
-    input, select, button {
-      font-size: 16px;
-      padding: 12px;
-      margin: 10px 5px 5px 0;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      background-color: #ffffff;
-    }
-
-    button {
-      background-color: #1976d2; /* Azul */
-      color: white;
-      cursor: pointer;
-      border: none;
-    }
-
-    button:hover {
-      background-color: #1565c0;
-    }
-
-    /* Estilo de la lista de sugerencias */
-    ul {
-      list-style: none;
-      padding: 0;
-      max-height: 250px;
-      overflow-y: auto;
-      background: white;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      margin-top: 10px;
-    }
-
-    li {
-      padding: 10px;
-      border-bottom: 1px solid #eee;
-      cursor: pointer;
-    }
-
-    li:hover {
-      background: #e3f2fd;
-    }
-
-    /* Estilos de la tabla */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-      background: white;
-      border-radius: 5px;
-      overflow: hidden;
-    }
-
-    th, td {
-      padding: 12px;
-      border: 1px solid #ddd;
-      text-align: left;
-    }
-
-    th {
-      background-color: #00bcd4; /* Azul */
-      color: white;
-    }
-
-    /* Estilos para los dispositivos móviles */
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 1.2em; /* Reducir tamaño del título */
-      }
-
-      /* Diseño de tabla para móviles */
-      table, thead, tbody, th, td, tr {
-        display: block;
-      }
-
-      td {
-        border: none;
-        position: relative;
-        padding-left: 50%;
-        text-align: right;
-      }
-
-      td::before {
-        position: absolute;
-        left: 10px;
-        top: 12px;
-        white-space: nowrap;
-        font-weight: bold;
-      }
-
-      td:nth-child(1)::before { content: "Código"; }
-      td:nth-child(2)::before { content: "Texto Breve"; }
-      td:nth-child(3)::before { content: "Descripción"; }
-      td:nth-child(4)::before { content: "UM"; }
-      td:nth-child(5)::before { content: "Cantidad"; }
-      td:nth-child(6)::before { content: "Eliminar"; }
-
-      /* Ajuste de botones y entradas */
-      input, select, button {
-        width: 100%;
-        box-sizing: border-box;
-        margin: 5px 0;
-      }
-    }
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; }
+    input, button, select { padding: 10px; font-size: 16px; margin: 5px 0; }
+    ul { list-style: none; padding: 0; max-height: 300px; overflow-y: auto; background: white; border: 1px solid #ccc; }
+    li { margin-bottom: 5px; padding: 10px; cursor: pointer; border-bottom: 1px solid #eee; }
+    li:hover { background: #e0f7fa; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { padding: 10px; border: 1px solid #ccc; }
+    th { background-color: #2196f3; color: white; }
   </style>
 </head>
 <body>
-  <header>
-    <h1><img src="https://ebiz.pe/wp-content/uploads/sites/5/2024/07/Logos-Copeinca-04-1-1.jpg" alt="C Copeinca">Materiales SAP</h1>
-  </header>
+  <h1>🛒 Materiales SAP</h1>
 
   <input type="text" id="busqueda" placeholder="Buscar material... Ej: *manguera*r12*" size="50">
   <ul id="sugerencias"></ul>
 
   <table id="carrito">
     <thead>
-      <tr>
-        <th>Código</th>
-        <th>Texto Breve</th>
-        <th>Descripción</th>
-        <th>UM</th>
-        <th>Cantidad</th>
-        <th>Eliminar</th>
-      </tr>
+      <tr><th>Código</th><th>Texto Breve</th><th>Descripción</th><th>UM</th><th>Cantidad</th><th>E/P</th><th>Eliminar</th></tr>
     </thead>
     <tbody></tbody>
   </table>
 
-  <div style="margin-top: 15px;">
-    <button onclick="exportarExcel()">📄 Exportar a Excel</button>
-    <button onclick="limpiarCarrito()">🧹 Limpiar</button>
-  </div>
+  <button onclick="exportarExcel()">📄 Exportar a Excel</button>
+  <button onclick="limpiarCarrito()">🧹 Limpiar</button>
 
-  <div style="margin-top: 20px;">
-    <label for="destinatario">Enviar a:</label>
-    <select id="destinatario">
-      <option value="">Seleccionar destinatario</option>
-      <option value="FCoronado@copeinca.com.pe">Felipe Coronado</option>
-      <option value="iascate@copeinca.com.pe">Ivan Ascate</option>
-      <option value="CGarciaD@copeinca.com.pe">Carlos Garcia Durand</option>
-      <option value="rdominguez@copeinca.com.pe">Ronald Valdelomar</option>
-      <option value="JMechato@copeinca.com.pe">Justo Mechato</option>
-      <option value="jchuchullo@copeinca.com.pe">Jose Chuchullo</option>
-    </select>
-    <button onclick="enviarCorreo()">📧 Enviar por correo</button>
-  </div>
+  <!-- Destinatario y envío -->
+  <br><br>
+  <select id="destinatario">
+    <option value="">Seleccionar destinatario</option>
+    <option value="FCoronado@copeinca.com.pe">Felipe Coronado</option>
+    <option value="iascate@copeinca.com.pe">Ivan Ascate</option>
+    <option value="CGarciaD@copeinca.com.pe">Carlos Garcia Durand</option>
+    <option value="rdominguez@copeinca.com.pe">Ronald Valdelomar Dominguez Villacorta</option>
+    <option value="JMechato@copeinca.com.pe">Justo Mechato Timana</option>
+    <option value="jchuchullo@copeinca.com.pe">Jose Chuchullo</option>
+  </select>
+  <button onclick="enviarCorreo()">📧 Enviar por correo</button>
 
   <script>
     let productosBase = [];
@@ -205,6 +63,7 @@
         <td>${prod.DescripcionLarga ?? ""}</td>
         <td>${prod.UM ?? ""}</td>
         <td><input type="number" value="1" min="1" style="width:60px;"></td>
+        <td><input type="text" placeholder="E/P" style="width:100%;" class="ep-input"></td>
         <td><button onclick="this.closest('tr').remove(); carrito.splice(carrito.indexOf(prod), 1);">❌</button></td>
       `;
       document.querySelector("#carrito tbody").appendChild(fila);
@@ -216,17 +75,34 @@
       carrito.length = 0;
     }
 
+    // Este script copia lo que se escribe en el primer campo de "E/P" a los demás campos de "E/P"
+    document.addEventListener("input", function (event) {
+      if (event.target.classList.contains("ep-input")) {
+        const epValue = event.target.value;
+        const inputsEPCeldas = document.querySelectorAll(".ep-input");
+
+        // Copiar valor a todas las celdas "E/P"
+        if (inputsEPCeldas.length > 0 && inputsEPCeldas[0].value === "") {
+          inputsEPCeldas.forEach(input => {
+            input.value = epValue;
+          });
+        }
+      }
+    });
+
     function exportarExcel() {
-      const datos = [["Código", "Texto Breve", "Descripción", "UM", "Cantidad"]];
+      const datos = [["Código", "Texto Breve", "Descripción", "UM", "Cantidad", "E/P"]];
       document.querySelectorAll("#carrito tbody tr").forEach(tr => {
         const tds = tr.querySelectorAll("td");
-        const cantidad = tr.querySelector("input").value;
+        const cantidad = tr.querySelector("input[type='number']").value;
+        const ep = tr.querySelector("input[type='text']").value;
         datos.push([
           tds[0].innerText,
           tds[1].innerText,
           tds[2].innerText,
           tds[3].innerText,
-          cantidad
+          cantidad,
+          ep
         ]);
       });
 
@@ -244,7 +120,7 @@
       }
 
       const asunto = encodeURIComponent("Solicitud de Materiales SAP");
-      const cuerpo = encodeURIComponent("Buenas,\n\nAdjunto lista de materiales SAP para tu revisión.\n\nSaludos,\n");
+      const cuerpo = encodeURIComponent("Buenas Ing,\n\nAdjunto lista de materiales SAP para tu revisión.\n\nSaludos,\n");
       window.location.href = `mailto:${destinatario}?subject=${asunto}&body=${cuerpo}`;
     }
 
