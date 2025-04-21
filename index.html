@@ -18,7 +18,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: #00bcd4; /* Azul original */
+      background: #00bcd4; /* Azul */
       color: white;
       padding: 10px 20px;
       border-radius: 8px;
@@ -49,7 +49,7 @@
     }
 
     button {
-      background-color: #1976d2;
+      background-color: #1976d2; /* Azul */
       color: white;
       cursor: pointer;
       border: none;
@@ -98,7 +98,7 @@
     }
 
     th {
-      background-color: #4caf50; /* Color verde */
+      background-color: #00bcd4; /* Azul */
       color: white;
     }
 
@@ -244,7 +244,7 @@
       }
 
       const asunto = encodeURIComponent("Solicitud de Materiales SAP");
-      const cuerpo = encodeURIComponent("Buenas Ing,\n\nAdjunto lista de materiales SAP para tu revisión.\n\nSaludos,\n");
+      const cuerpo = encodeURIComponent("Buenas,\n\nAdjunto lista de materiales SAP para tu revisión.\n\nSaludos,\n");
       window.location.href = `mailto:${destinatario}?subject=${asunto}&body=${cuerpo}`;
     }
 
