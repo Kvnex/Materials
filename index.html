@@ -5,42 +5,47 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Materiales SAP</title>
   <style>
+    /* Reset de estilo básico */
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: #f0f2f5;
+      background: #f9f9f9;
       margin: 0;
       padding: 20px;
     }
 
+    /* Cabecera con el logo de Copeinca */
     header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: #0d47a1;
+      background: #00bcd4; /* Color azul más suave */
       color: white;
-      padding: 15px 20px;
+      padding: 10px 20px;
       border-radius: 8px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     }
 
     header h1 {
       display: flex;
       align-items: center;
-      font-size: 1.5em;
+      font-size: 1.4em;
       margin: 0;
     }
 
     header img {
-      height: 32px;
+      height: 28px;
       margin-right: 10px;
-      border-radius: 4px;
+      border-radius: 50%;
     }
 
+    /* Estilos para los botones y entradas */
     input, select, button {
       font-size: 16px;
-      padding: 10px;
+      padding: 12px;
       margin: 10px 5px 5px 0;
       border-radius: 5px;
       border: 1px solid #ccc;
+      background-color: #ffffff;
     }
 
     button {
@@ -54,6 +59,7 @@
       background-color: #1565c0;
     }
 
+    /* Estilo de la lista de sugerencias */
     ul {
       list-style: none;
       padding: 0;
@@ -62,6 +68,7 @@
       background: white;
       border: 1px solid #ccc;
       border-radius: 5px;
+      margin-top: 10px;
     }
 
     li {
@@ -74,6 +81,7 @@
       background: #e3f2fd;
     }
 
+    /* Estilos de la tabla */
     table {
       width: 100%;
       border-collapse: collapse;
@@ -90,11 +98,17 @@
     }
 
     th {
-      background-color: #2196f3;
+      background-color: #4caf50; /* Color verde */
       color: white;
     }
 
+    /* Estilos para los dispositivos móviles */
     @media (max-width: 600px) {
+      header h1 {
+        font-size: 1.2em; /* Reducir tamaño del título */
+      }
+
+      /* Diseño de tabla para móviles */
       table, thead, tbody, th, td, tr {
         display: block;
       }
@@ -120,6 +134,13 @@
       td:nth-child(4)::before { content: "UM"; }
       td:nth-child(5)::before { content: "Cantidad"; }
       td:nth-child(6)::before { content: "Eliminar"; }
+
+      /* Ajuste de botones y entradas */
+      input, select, button {
+        width: 100%;
+        box-sizing: border-box;
+        margin: 5px 0;
+      }
     }
   </style>
 </head>
@@ -262,4 +283,3 @@
   <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 </body>
 </html>
-
