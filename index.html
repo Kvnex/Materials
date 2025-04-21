@@ -27,21 +27,23 @@
     <tbody></tbody>
   </table>
 
-  <button onclick="exportarExcel()">📄 Exportar a Excel</button>
-  <button onclick="limpiarCarrito()">🧹 Limpiar</button>
+  <br>
 
-  <!-- Destinatario y envío -->
-  <br><br>
+  <label for="destinatario"><strong>Enviar a:</strong></label>
   <select id="destinatario">
-    <option value="">Seleccionar destinatario</option>
+    <option value="">-- Selecciona un destinatario --</option>
     <option value="FCoronado@copeinca.com.pe">Felipe Coronado</option>
     <option value="iascate@copeinca.com.pe">Ivan Ascate</option>
     <option value="CGarciaD@copeinca.com.pe">Carlos Garcia Durand</option>
-    <option value="rdominguez@copeinca.com.pe">Ronald Valdelomar Dominguez Villacorta</option>
-    <option value="JMechato@copeinca.com.pe">Justo Mechato Timana</option>
+    <option value="rdominguez@copeinca.com.pe">Ronald Valdelomar</option>
+    <option value="JMechato@copeinca.com.pe">Justo Mechato</option>
     <option value="jchuchullo@copeinca.com.pe">Jose Chuchullo</option>
   </select>
-  <button onclick="enviarCorreo()">📧 Enviar por correo</button>
+
+  <br>
+  <button onclick="exportarExcel()">📤 Exportar a Excel</button>
+  <button onclick="enviarCorreo()">✉️ Enviar por correo</button>
+  <button onclick="limpiarCarrito()">🧹 Limpiar</button>
 
   <script>
     let productosBase = [];
@@ -68,6 +70,38 @@
       document.querySelector("#carrito tbody").appendChild(fila);
       carrito.push(prod);
     }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      await cargarBase();
+
+      const inputBusqueda = document.getElementById("busqueda");
+      const ulSugerencias = document.getElementById("sugerencias");
+
+      inputBusqueda.addEventListener("input", function () {
+        const texto = this.value.trim().toLowerCase();
+        ulSugerencias.innerHTML = "";
+        if (texto.length < 2) return;
+
+        const palabras = texto.replace(/\*/g, ".*").split(/\s+/);
+        const regex = new RegExp(palabras.join(".*"), "i");
+
+        const resultados = productosBase.filter(p => {
+          const cadena = `${p.Codigo} ${p.TextoBreve ?? ""} ${p.DescripcionLarga ?? ""}`.toLowerCase();
+          return regex.test(cadena);
+        }).slice(0, 30);
+
+        resultados.forEach(prod => {
+          const li = document.createElement("li");
+          li.textContent = `${prod.TextoBreve} (${prod.Codigo})`;
+          li.onclick = () => {
+            agregarAlCarrito(prod);
+            inputBusqueda.value = "";
+            ulSugerencias.innerHTML = "";
+          };
+          ulSugerencias.appendChild(li);
+        });
+      });
+    });
 
     function limpiarCarrito() {
       document.querySelector("#carrito tbody").innerHTML = "";
@@ -102,42 +136,27 @@
       }
 
       const asunto = encodeURIComponent("Solicitud de Materiales SAP");
-      const cuerpo = encodeURIComponent("Hola,\n\nAdjunto lista de materiales SAP para tu revisión.\n\nSaludos,\n");
+
+      let cuerpo = "Hola,%0D%0A%0D%0AAdjunto lista de materiales SAP:%0D%0A%0D%0A";
+      cuerpo += "Código\tTexto Breve\tDescripción\tUM\tCantidad%0D%0A";
+
+      const filas = document.querySelectorAll("#carrito tbody tr");
+      if (filas.length === 0) {
+        cuerpo += "⚠️ No hay materiales en el carrito.%0D%0A";
+      } else {
+        filas.forEach(tr => {
+          const tds = tr.querySelectorAll("td");
+          const cantidad = tr.querySelector("input").value;
+          cuerpo += `${tds[0].innerText}\t${tds[1].innerText}\t${tds[2].innerText}\t${tds[3].innerText}\t${cantidad}%0D%0A`;
+        });
+      }
+
+      cuerpo += "%0D%0ASaludos.";
+
       window.location.href = `mailto:${destinatario}?subject=${asunto}&body=${cuerpo}`;
     }
-
-    document.addEventListener("DOMContentLoaded", async () => {
-      await cargarBase();
-
-      const inputBusqueda = document.getElementById("busqueda");
-      const ulSugerencias = document.getElementById("sugerencias");
-
-      inputBusqueda.addEventListener("input", function () {
-        const texto = this.value.trim().toLowerCase();
-        ulSugerencias.innerHTML = "";
-        if (texto.length < 2) return;
-
-        const palabras = texto.replace(/\*/g, ".*").split(/\s+/);
-        const regex = new RegExp(palabras.join(".*"), "i");
-
-        const resultados = productosBase.filter(p => {
-          const cadena = `${p.Codigo} ${p.TextoBreve ?? ""} ${p.DescripcionLarga ?? ""}`.toLowerCase();
-          return regex.test(cadena);
-        }).slice(0, 30);
-
-        resultados.forEach(prod => {
-          const li = document.createElement("li");
-          li.textContent = `${prod.TextoBreve} (${prod.Codigo})`;
-          li.onclick = () => {
-            agregarAlCarrito(prod);
-            inputBusqueda.value = "";
-            ulSugerencias.innerHTML = "";
-          };
-          ulSugerencias.appendChild(li);
-        });
-      });
-    });
   </script>
   <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 </body>
 </html>
+
