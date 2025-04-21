@@ -5,7 +5,7 @@
   <title>Materiales SAP</title>
   <style>
     body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; }
-    input, button { padding: 10px; font-size: 16px; }
+    input, button, select { padding: 10px; font-size: 16px; margin: 5px 0; }
     ul { list-style: none; padding: 0; max-height: 300px; overflow-y: auto; background: white; border: 1px solid #ccc; }
     li { margin-bottom: 5px; padding: 10px; cursor: pointer; border-bottom: 1px solid #eee; }
     li:hover { background: #e0f7fa; }
@@ -16,21 +16,34 @@
 </head>
 <body>
   <h1>🛒 Materiales SAP</h1>
+
   <input type="text" id="busqueda" placeholder="Buscar material... Ej: *manguera*r12*" size="50">
   <ul id="sugerencias"></ul>
+
   <table id="carrito">
     <thead>
       <tr><th>Código</th><th>Texto Breve</th><th>Descripción</th><th>UM</th><th>Cantidad</th><th>Eliminar</th></tr>
     </thead>
     <tbody></tbody>
   </table>
-  <button onclick="exportarExcel()">Exportar a Excel</button>
+
+  <button onclick="exportarExcel()">📄 Exportar a Excel</button>
   <button onclick="limpiarCarrito()">🧹 Limpiar</button>
+
+  <!-- Destinatario y envío -->
+  <br><br>
+  <select id="destinatario">
+    <option value="">Seleccionar destinatario</option>
+    <option value="FCoronado@copeinca.com.pe">Felipe Coronado</option>
+    <option value="iascate@copeinca.com.pe">Ivan Ascate</option>
+    <option value="CGarciaD@copeinca.com.pe">Carlos Garcia Durand</option>
+    <option value="rdominguez@copeinca.com.pe">Ronald Valdelomar Dominguez Villacorta</option>
+    <option value="JMechato@copeinca.com.pe">Justo Mechato Timana</option>
+    <option value="jchuchullo@copeinca.com.pe">Jose Chuchullo</option>
+  </select>
+  <button onclick="enviarCorreo()">📧 Enviar por correo</button>
+
   <script>
-    function limpiarCarrito() {
-  document.querySelector("#carrito tbody").innerHTML = "";
-  carrito.length = 0;
-}
     let productosBase = [];
     const carrito = [];
 
@@ -54,6 +67,43 @@
       `;
       document.querySelector("#carrito tbody").appendChild(fila);
       carrito.push(prod);
+    }
+
+    function limpiarCarrito() {
+      document.querySelector("#carrito tbody").innerHTML = "";
+      carrito.length = 0;
+    }
+
+    function exportarExcel() {
+      const datos = [["Código", "Texto Breve", "Descripción", "UM", "Cantidad"]];
+      document.querySelectorAll("#carrito tbody tr").forEach(tr => {
+        const tds = tr.querySelectorAll("td");
+        const cantidad = tr.querySelector("input").value;
+        datos.push([
+          tds[0].innerText,
+          tds[1].innerText,
+          tds[2].innerText,
+          tds[3].innerText,
+          cantidad
+        ]);
+      });
+
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.aoa_to_sheet(datos);
+      XLSX.utils.book_append_sheet(wb, ws, "MATERIALES SAP");
+      XLSX.writeFile(wb, "Materiales_SAP.xlsx");
+    }
+
+    function enviarCorreo() {
+      const destinatario = document.getElementById("destinatario").value;
+      if (!destinatario) {
+        alert("Por favor selecciona un destinatario.");
+        return;
+      }
+
+      const asunto = encodeURIComponent("Solicitud de Materiales SAP");
+      const cuerpo = encodeURIComponent("Hola,\n\nAdjunto lista de materiales SAP para tu revisión.\n\nSaludos,\n");
+      window.location.href = `mailto:${destinatario}?subject=${asunto}&body=${cuerpo}`;
     }
 
     document.addEventListener("DOMContentLoaded", async () => {
@@ -87,25 +137,6 @@
         });
       });
     });
-    function exportarExcel() {
-  const datos = [["Código", "Texto Breve", "Descripción", "UM", "Cantidad"]];
-  document.querySelectorAll("#carrito tbody tr").forEach(tr => {
-    const tds = tr.querySelectorAll("td");
-    const cantidad = tr.querySelector("input").value;
-    datos.push([
-      tds[0].innerText,
-      tds[1].innerText,
-      tds[2].innerText,
-      tds[3].innerText,
-      cantidad
-    ]);
-  });
-
-  const wb = XLSX.utils.book_new();
-  const ws = XLSX.utils.aoa_to_sheet(datos);
-  XLSX.utils.book_append_sheet(wb, ws, "MATERIALES SAP");
-  XLSX.writeFile(wb, "Materiales_SAP.xlsx");
-}
   </script>
   <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 </body>
